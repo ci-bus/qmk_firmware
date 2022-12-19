@@ -9,4 +9,3 @@ RGB_MATRIX_ENABLE = no     # Per key rgb leds
 SLEEP_LED_ENABLE = no    # Breathing sleep LED during USB suspend
 SPLIT_KEYBOARD = yes
 OLED_ENABLE= yes
-OLED_DRIVER = SSD1306
