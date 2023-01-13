@@ -3,6 +3,7 @@ Copyright 2012 Jun Wako <wakojun@gmail.com>
 Copyright 2015 Jack Humbert
 Copyright 2017 F_YUUCHI
 Copyright 2020 Ben Roesner (keycapsss.com)
+Copyright 2022 Miguelio (miguelio.com)
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -39,9 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define RGBLED_NUM 72
 #define RGBLED_SPLIT { 36, 36 }
 #define RGBLIGHT_SPLIT
-#define RGBLIGHT_LIMIT_VAL 120
 #define WS2812_TRST_US 80
-#define RGBLIGHT_ANIMATIONS
 
 /* Encoders */
 #define ENCODERS_PAD_A { D4 }
@@ -49,4 +48,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define ENCODERS_PAD_A_RIGHT { F5 }
 #define ENCODERS_PAD_B_RIGHT { D4 }
 #define ENCODER_RESOLUTION 4
-#define TAP_CODE_DELAY 10
+#define TAP_CODE_DELAY 5
