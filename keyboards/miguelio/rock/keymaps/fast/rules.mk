@@ -4,6 +4,7 @@
 #
 EXTRAKEY_ENABLE = yes       # Audio control and System control
 NKRO_ENABLE = no            # Nkey Rollover - if this doesn't work, see here: https://github.com/tmk/tmk_keyboard/wiki/FAQ#nkro-doesnt-work
-VIA_ENABLE = yes			# VIA CONFIG
-RGBLIGHT_ENABLE = yes       # RGB Underglow
+VIA_ENABLE = no			# VIA CONFIG
+RGBLIGHT_ENABLE = no       # RGB Underglow
 BACKLIGHT_ENABLE = no       # Enable keyboard backlight functionality
+
