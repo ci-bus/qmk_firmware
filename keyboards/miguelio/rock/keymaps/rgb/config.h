@@ -1,0 +1,9 @@
+#pragma once
+
+#define RGB_DI_PIN D0
+#define RGBLED_NUM 16
+#define RGBLIGHT_HUE_STEP 10
+#define RGBLIGHT_SAT_STEP 17
+#define RGBLIGHT_VAL_STEP 17
+#define RGBLIGHT_LIMIT_VAL 255
+#define RGBLIGHT_ANIMATIONS

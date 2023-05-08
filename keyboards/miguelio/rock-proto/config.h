@@ -1,5 +1,5 @@
 /*
-Copyright 2021 Jay Greco
+Copyright 2021 Miguelio <teclados@miguelio.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,16 +19,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config_common.h"
 
-/* key matrix size */
-#define MATRIX_ROWS 2
-#define MATRIX_COLS 3
+#define MATRIX_ROWS 9
+#define MATRIX_COLS 8
 
-#define DIRECT_PINS {{D4,D5,B1}, {C3,C2,C1}}
+#define MATRIX_ROW_PINS \
+    { D1, F4, B4, B5, F6, F7, F5, B3, B2 }
+#define MATRIX_COL_PINS \
+    { D3, D2, D4, C6, D7, E6, B1, B6 }
+#define UNUSED_PINS
 
-/* Set 0 if debouncing isn't needed */
-#define DEBOUNCE 10
+#define DIODE_DIRECTION COL2ROW
 
-/* Optional encoder pins */
-#define ENCODERS_PAD_A { D6 }
-#define ENCODERS_PAD_B { D7 }
-#define TAP_CODE_DELAY 10
+#define DEBOUNCE 25
