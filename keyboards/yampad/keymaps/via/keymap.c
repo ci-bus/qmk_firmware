@@ -20,7 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
-
+#include <stdio.h>
 #include QMK_KEYBOARD_H
 
 // Each layer gets a name for readability, which is then used in the keymap matrix below.
