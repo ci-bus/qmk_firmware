@@ -14,3 +14,4 @@ NKRO_ENABLE = yes           # Enable N-Key Rollover
 OLED_DRIVER = SSD1306
 OLED_ENABLE = yes
 RGBLIGHT_ENABLE = yes       # Enable keyboard RGB underglow
+QMK_KEYS_PER_SCAN = sym_eager_pk

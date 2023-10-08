@@ -11,7 +11,7 @@ typedef struct {
     uint8_t        image_head_size;
     uint32_t       last_time;
     uint16_t       interval;
-    int8_t         element_index;
+    uint16_t       element_index;
     const uint8_t *image;
 } ge_sprite;
 
@@ -36,14 +36,14 @@ static uint16_t    gengine_width             = 0;
 static uint16_t    gengine_height            = 0;
 static uint16_t   *gengine_buffer            = NULL;
 static ge_element *gengine_elements          = NULL;
-static uint8_t     gengine_elements_count    = 0;
+static uint16_t    gengine_elements_count    = 0;
 static uint16_t    gengine_empty_pixel_color = 0xFFFF;
 static float       gengine_delta             = 0;
 static uint32_t    gengine_last_draw         = 0;
 static bool        gengine_started           = false;
 static ge_camera   gengine_camera;
 
-uint16_t *ge_init_engine(uint16_t width, uint16_t height, uint8_t elements_count) {
+uint16_t *ge_init_engine(uint16_t width, uint16_t height, uint16_t elements_count) {
     gengine_width          = width;
     gengine_height         = height;
     gengine_elements_count = elements_count;
@@ -51,7 +51,7 @@ uint16_t *ge_init_engine(uint16_t width, uint16_t height, uint8_t elements_count
     gengine_camera.pos_y   = 0;
     gengine_buffer         = (uint16_t *)malloc(width * height * sizeof(uint16_t));
     gengine_elements       = (ge_element *)malloc(gengine_elements_count * sizeof(ge_element));
-    for (uint8_t i = 0; i < gengine_elements_count; i++) {
+    for (uint16_t i = 0; i < gengine_elements_count; i++) {
         gengine_elements[i].used = false;
     }
     return gengine_buffer;
@@ -60,6 +60,11 @@ uint16_t *ge_init_engine(uint16_t width, uint16_t height, uint8_t elements_count
 void ge_move_camera(int16_t x, int16_t y) {
     gengine_camera.pos_x += x;
     gengine_camera.pos_y += y;
+}
+
+void ge_set_camera_position(int16_t x, int16_t y) {
+    gengine_camera.pos_x = x;
+    gengine_camera.pos_y = y;
 }
 
 void ge_set_pixel(struct painter_driver_t *driver, uint16_t x, uint16_t y, uint16_t rgb565) {
@@ -145,7 +150,7 @@ void ge_flip_sprite(ge_sprite *sprite, bool flipped) {
 
 bool ge_add_sprite_element(ge_sprite *sprite, int16_t x, int16_t y) {
     // Find free element index
-    for (uint8_t i = 0; i < gengine_elements_count; i++) {
+    for (uint16_t i = 0; i < gengine_elements_count; i++) {
         if (!gengine_elements[i].used) {
             gengine_elements[i].used    = true;
             gengine_elements[i].sprite  = sprite;
@@ -157,6 +162,10 @@ bool ge_add_sprite_element(ge_sprite *sprite, int16_t x, int16_t y) {
         }
     }
     return false;
+}
+
+ge_element *ge_get_element(uint16_t index) {
+    return &gengine_elements[index];
 }
 
 void ge_put_sprite(struct painter_driver_t *driver, ge_element *element) {
@@ -201,7 +210,7 @@ void ge_put_sprite(struct painter_driver_t *driver, ge_element *element) {
 
 void ge_put_sprites(painter_device_t display) {
     struct painter_driver_t *driver = (struct painter_driver_t *)display;
-    for (uint8_t i = 0; i < gengine_elements_count; i++) {
+    for (uint16_t i = 0; i < gengine_elements_count; i++) {
         if (gengine_elements[i].used) {
             ge_put_sprite(driver, &gengine_elements[i]);
         }
