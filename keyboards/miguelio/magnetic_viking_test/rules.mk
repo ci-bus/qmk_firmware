@@ -1,0 +1,5 @@
+ANALOG_DRIVER_REQUIRED = yes
+WS2812_DRIVER = vendor
+CUSTOM_MATRIX = yes
+SRC += mv_main.c
+CONSOLE_ENABLE = yes
