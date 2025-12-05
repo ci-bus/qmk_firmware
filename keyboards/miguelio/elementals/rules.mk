@@ -1,2 +1,5 @@
 VIA_ENABLE = yes
 DEBOUNCE_TYPE = sym_eager_pk
+USB_WAIT_FOR_ENUMERATION = yes
+WS2812_DRIVER = vendor
+LTO_ENABLE = yes
