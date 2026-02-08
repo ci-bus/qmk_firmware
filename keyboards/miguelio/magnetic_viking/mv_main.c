@@ -31,9 +31,10 @@ static uint32_t count     = 0;
 static uint16_t last_time = 0;
 #endif
 
-static uint8_t current_layer = 0;
-static bool    calibrating   = false;
-static bool    fast_release  = false;
+static uint8_t current_layer     = 0;
+static bool    calibrating       = false;
+static bool    need_to_calibrate = false;
+static bool    fast_release      = false;
 
 // Threshold
 static uint8_t hall_threshold                             = HALL_DEFAULT_THRESHOLD;
@@ -67,7 +68,7 @@ void matrix_init(void) {
 }
 
 bool valid_sensor(uint8_t index) {
-    return (index != 17 && index != 35);
+    return (index != 30 && index != 52);
 }
 
 void matrix_hall_reset_range(void) {
@@ -75,6 +76,21 @@ void matrix_hall_reset_range(void) {
         for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
             uint8_t index            = (row * MATRIX_COLS) + col;
             matrix_hall_range[index] = HALL_MIN_RANGE;
+        }
+    }
+    for (uint8_t t = 0; t < HALL_GET_BASE_SCANS; t++) {
+        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+            for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+                uint8_t index = row * MATRIX_COLS + col;
+                if (t == 0) {
+                    matrix_hall_base[index] = atomic_load(&matrix_hall_raw[index]);
+                } else {
+                    matrix_hall_base[index] += atomic_load(&matrix_hall_raw[index]);
+                    if (t == HALL_GET_BASE_SCANS - 1) {
+                        matrix_hall_base[index] = matrix_hall_base[index] / HALL_GET_BASE_SCANS;
+                    }
+                }
+            }
         }
     }
 }
@@ -166,20 +182,6 @@ void check_minimun_threshold(uint8_t index) {
     }
 }
 
-void matrix_hall_get_base(void) {
-    for (uint8_t t = 0; t < HALL_GET_BASE_SCANS; t++) {
-        for (uint8_t col = 0; col < MATRIX_COLS; col++) {
-            for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
-                uint8_t index = row * MATRIX_COLS + col;
-                matrix_hall_base[index] += atomic_load(&matrix_hall_raw[index]);
-                if (t == HALL_GET_BASE_SCANS - 1) {
-                    matrix_hall_base[index] = matrix_hall_base[index] / HALL_GET_BASE_SCANS;
-                }
-            }
-        }
-    }
-}
-
 void matrix_hall_get_range(void) {
     for (uint8_t col = 0; col < MATRIX_COLS; col++) {
         for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
@@ -191,6 +193,20 @@ void matrix_hall_get_range(void) {
             if (matrix_hall_range[index] < HALL_MIN_RANGE) {
                 matrix_hall_range[index] = 0;
             }
+        }
+    }
+}
+
+void matrix_hall_get_base(void) {
+    for (uint8_t index = 0; index < MATRIX_ROWS * MATRIX_COLS; index++) {
+        void    *address   = ((void *)EEPROM_HALL_BASE_START) + (index * 2);
+        uint16_t temp_base = eeprom_read_byte(address) << 8;
+        temp_base |= eeprom_read_byte(address + 1);
+        // Secure base
+        if (temp_base > HALL_MIN_BASE && temp_base < HALL_MAX_RANGE * 2) {
+            matrix_hall_base[index] = temp_base;
+        } else if (valid_sensor(index) && matrix_hall_range[index] > 0) {
+            need_to_calibrate = true;
         }
     }
 }
@@ -249,10 +265,10 @@ void get_configuration_fast_release(void) {
 }
 
 void get_configurations(void) {
-    // Base sensor signal
-    matrix_hall_get_base();
     // Range switch sensor value
     matrix_hall_get_range();
+    // Base sensor signal
+    matrix_hall_get_base();
     // Calibrating
     get_configuration_calibrating();
     // Curve response
@@ -267,6 +283,11 @@ void keyboard_post_init_kb(void) {
     wait_ms(CORE1_WAIT_INIT);
     get_configurations();
     rgblight_disable();
+    if (need_to_calibrate) {
+        rgblight_enable_noeeprom();
+        rgblight_sethsv_noeeprom(HSV_RED);
+        rgblight_mode_noeeprom(RGBLIGHT_MODE_BREATHING + 3);
+    }
 #ifdef COUNT_SCANS
     last_time = timer_read();
 #endif
@@ -339,7 +360,7 @@ uint8_t matrix_scan_keyboard(void) {
                             changed                         = true;
                             matrix_hall_fast_release[index] = percent;
 #ifdef CONSOLE_ENABLE
-                            uprintf("Press col: %u row: %u base: %u range: %u value: %lu threshold: %u\n", col, row, matrix_hall_base[index], matrix_hall_range[index], raw, hall_threshold);
+                            uprintf("Press col: %u row: %u base: %u range: %u value: %lu threshold: %u index: %u\n", col, row, matrix_hall_base[index], matrix_hall_range[index], raw, hall_threshold, index);
 #endif
                         } else if (percent < matrix_hall_fast_release[index]) {
                             matrix_hall_fast_release[index] = percent;
@@ -348,7 +369,7 @@ uint8_t matrix_scan_keyboard(void) {
                         matrix[row] |= (1 << col);
                         changed = true;
 #ifdef CONSOLE_ENABLE
-                        uprintf("Press col: %u row: %u base: %u range: %u value: %lu threshold: %u\n", col, row, matrix_hall_base[index], matrix_hall_range[index], raw, hall_threshold);
+                        uprintf("Press col: %u row: %u base: %u range: %u value: %lu threshold: %u index: %u\n", col, row, matrix_hall_base[index], matrix_hall_range[index], raw, hall_threshold, index);
 #endif
                     }
                 }
@@ -378,8 +399,8 @@ void custom_set_value(uint8_t *data) {
                 // Save ranges
                 for (uint8_t index = 0; index < MATRIX_ROWS * MATRIX_COLS; index++) {
                     void *address = ((void *)EEPROM_HALL_RANGE_START) + (index * 2);
-                    // Secure min range
-                    if (matrix_hall_range[index] <= HALL_MIN_RANGE) {
+                    // Secure min range and base
+                    if (matrix_hall_range[index] <= HALL_MIN_RANGE || matrix_hall_base[index] <= HALL_MIN_BASE) {
                         matrix_hall_range[index] = 0;
                     }
                     eeprom_update_byte(address, (uint8_t)(matrix_hall_range[index] >> 8));
@@ -387,6 +408,28 @@ void custom_set_value(uint8_t *data) {
                 }
 #ifdef CONSOLE_ENABLE
                 uprintf("Ranges saved!\n");
+#endif
+                // Save bases
+                for (uint8_t t = 0; t < HALL_GET_BASE_SCANS; t++) {
+                    for (uint8_t col = 0; col < MATRIX_COLS; col++) {
+                        for (uint8_t row = 0; row < MATRIX_ROWS; row++) {
+                            uint8_t index   = row * MATRIX_COLS + col;
+                            void   *address = ((void *)EEPROM_HALL_BASE_START) + (index * 2);
+                            if (t == 0) {
+                                matrix_hall_base[index] = atomic_load(&matrix_hall_raw[index]);
+                            } else {
+                                matrix_hall_base[index] += atomic_load(&matrix_hall_raw[index]);
+                                if (t == HALL_GET_BASE_SCANS - 1) {
+                                    matrix_hall_base[index] = matrix_hall_base[index] / HALL_GET_BASE_SCANS;
+                                    eeprom_update_byte(address, (uint8_t)(matrix_hall_base[index] >> 8));
+                                    eeprom_update_byte(address + 1, (uint8_t)(matrix_hall_base[index] & 0xFF));
+                                }
+                            }
+                        }
+                    }
+                }
+#ifdef CONSOLE_ENABLE
+                uprintf("Bases saved!\n");
 #endif
             }
             get_configuration_calibrating();
@@ -694,7 +737,7 @@ layer_state_t layer_state_set_user(layer_state_t state) {
 
 bool led_update_kb(led_t led_state) {
     bool res = led_update_user(led_state);
-    if (res) {
+    if (res && !need_to_calibrate) {
         if (led_state.caps_lock) {
             rgblight_enable_noeeprom();
         } else {

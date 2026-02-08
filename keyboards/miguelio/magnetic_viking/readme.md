@@ -1,5 +1,5 @@
 # Miguelio Magnetic Viking
-version 1.1.3
+Rev 2 version 1.1.3
 
 # QMK
 QMK Firmware 0.28.10

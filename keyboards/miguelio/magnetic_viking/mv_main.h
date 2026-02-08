@@ -33,10 +33,10 @@ enum layer_names { _BASE, _FN, _GAMING, _MIDI, _THRESHOLD, _CURVE };
 // Hall sensor configs
 #define HALL_GET_BASE_SCANS 100   // Rounds to get base value
 #define HALL_MIN_BASE 100         // Min base value
-#define HALL_MIN_RANGE 30        // Min analog value from base
+#define HALL_MIN_RANGE 30         // Min analog value from base
 #define HALL_MAX_RANGE 512        // Max analog value from base
-#define HALL_WAIT_US_LOAD 3       // Wait to load
-#define HALL_WAIT_US_DISCHARGE 18 // Wait to discharge
+#define HALL_WAIT_US_LOAD 15      // Wait to load
+#define HALL_WAIT_US_DISCHARGE 10 // Wait to discharge
 
 #define HALL_DEFAULT_THRESHOLD 50   // Threshold trigger value in percent
 #define HALL_THRESHOLD_MARGIN 6     // Margin threshold in percent
@@ -62,6 +62,7 @@ extern pin_t                 col_pins[MATRIX_COLS];
 // VIA and custom configs
 #define EEPROM_CUSTOM_CONFIG (VIA_EEPROM_CUSTOM_CONFIG_ADDR)
 #define EEPROM_HALL_RANGE_START (EEPROM_CUSTOM_CONFIG + 6)
+#define EEPROM_HALL_BASE_START (EEPROM_HALL_RANGE_START + (MATRIX_ROWS * MATRIX_COLS * 2))
 
 // clang-format off
 enum via_custom_value_id {
