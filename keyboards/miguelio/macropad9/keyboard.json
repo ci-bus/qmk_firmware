@@ -1,0 +1,46 @@
+{
+  "keyboard_name": "Miguelio Macropad 9",
+  "manufacturer": "Miguelio",
+  "url": "https://miguelio.com",
+  "maintainer": "Miguelio",
+  "usb": {
+    "vid": "0x4D47",
+    "pid": "0x0015",
+    "device_version": "1.0.0"
+  },
+  "processor": "RP2040",
+  "bootloader": "rp2040",
+  "matrix_pins": {
+    "direct": [
+      ["GP7", "GP12", "GP0"],
+      ["GP5", "GP6", "GP1"],
+      ["GP4", "GP3", "GP2"]
+    ]
+  },
+  "layouts": {
+    "LAYOUT": {
+      "layout": [
+        {"x": 0, "y": 0, "matrix": [0, 0]},
+        {"x": 1, "y": 0, "matrix": [0, 1]},
+        {"x": 2, "y": 0, "matrix": [0, 2]},
+
+        {"x": 0, "y": 1, "matrix": [1, 0]},
+        {"x": 1, "y": 1, "matrix": [1, 1]},
+        {"x": 2, "y": 1, "matrix": [1, 2]},
+
+        {"x": 0, "y": 2, "matrix": [2, 0]},
+        {"x": 1, "y": 2, "matrix": [2, 1]},
+        {"x": 2, "y": 2, "matrix": [2, 2]}
+      ]
+    }
+  },
+  "features": {
+    "bootmagic": true,
+    "command": false,
+    "console": false,
+    "extrakey": true,
+    "mousekey": true,
+    "nkro": true,
+    "rgblight": false
+  }
+}
