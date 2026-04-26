@@ -9,9 +9,6 @@
   },
   "processor": "RP2040",
   "bootloader": "rp2040",
-  "build": {
-    "lto": true
-  },
   "features": {
     "bootmagic": true,
     "extrakey": true,
@@ -19,7 +16,6 @@
     "nkro": true
   },
   "rgblight": {
-    "driver": "ws2812",
     "led_count": 1,
     "hue_steps": 5,
     "saturation_steps": 5,
@@ -39,12 +35,12 @@
     }
   },
   "ws2812": {
-    "pin": "B15"
+    "pin": "GP27"
   },
   "diode_direction": "ROW2COL",
   "matrix_pins": {
-    "rows": ["A8", "A9", "A10", "B3", "A15"],
-    "cols": ["A3", "A2", "A1", "A0", "C15", "C14", "B9", "B8", "B7", "B6", "A7", "A6", "A5", "A4", "B5", "B4"]
+    "rows": ["GP0", "GP1", "GP2", "GP3", "GP4"],
+    "cols": ["GP5", "GP6", "GP7", "GP10", "GP11", "GP12", "GP16", "GP17", "GP18", "GP19", "GP22", "GP23", "GP24", "GP25", "GP26", "GP21", "GP20"]
   },
   "layouts": {
     "LAYOUT": {
@@ -62,12 +58,12 @@
         {"label": "0 )", "matrix": [0, 10], "x": 10, "y": 0},
         {"label": "- _", "matrix": [0, 11], "x": 11, "y": 0},
         {"label": "= +", "matrix": [0, 12], "x": 12, "y": 0},
-        {"label": "Bsp", "matrix": [0, 13], "x": 13, "y": 0},
-        {"label": "` ~", "matrix": [4, 7], "x": 14, "y": 0},
+        {"label": "` ~", "matrix": [0, 13], "x": 13, "y": 0},
+        {"label": "Bsp", "matrix": [1, 14], "x": 14, "y": 0},
 
         {"label": "Ins", "matrix": [0, 14], "x": 16, "y": 0},
         {"label": "Home", "matrix": [0, 15], "x": 17, "y": 0},
-        {"label": "PgU", "matrix": [2, 14], "x": 18, "y": 0},
+        {"label": "PgU", "matrix": [0, 16], "x": 18, "y": 0},
 
         {"label": "Tab", "matrix": [1, 0], "x": 1, "y": 1, "w": 1.5},
         {"label": "Q", "matrix": [1, 1], "x": 1.5, "y": 1},
@@ -82,11 +78,11 @@
         {"label": "P", "matrix": [1, 10], "x": 10.5, "y": 1},
         {"label": "[ {", "matrix": [1, 11], "x": 11.5, "y": 1},
         {"label": "] }", "matrix": [1, 12], "x": 12.5, "y": 1},
-        {"label": "\\ |", "matrix": [1, 13], "x": 13.5, "y": 1, "w": 1.5},
+        {"label": "\\ |", "matrix": [2, 14], "x": 13.5, "y": 1, "w": 1.5},
 
-        {"label": "Del", "matrix": [1, 14], "x": 16, "y": 1},
-        {"label": "End", "matrix": [1, 15], "x": 17, "y": 1},
-        {"label": "PgD", "matrix": [2, 15], "x": 18, "y": 1},
+        {"label": "Del", "matrix": [3, 14], "x": 16, "y": 1},
+        {"label": "End", "matrix": [2, 15], "x": 17, "y": 1},
+        {"label": "PgD", "matrix": [2, 16], "x": 18, "y": 1},
 
         {"label": "Clk", "matrix": [2, 0], "x": 0, "y": 0, "w": 1.75},
         {"label": "A", "matrix": [2, 1], "x": 1.75, "y": 0},
@@ -100,9 +96,11 @@
         {"label": "L", "matrix": [2, 9], "x": 9.75, "y": 0},
         {"label": "; :", "matrix": [2, 10], "x": 10.75, "y": 0},
         {"label": "' \"", "matrix": [2, 11], "x": 11.75, "y": 0},
-        {"label": "Ent", "matrix": [2, 13], "x": 12.75, "y": 0, "w": 2.25},
+        {"label": "\\ |", "matrix": [2, 12], "x": 12.75, "y": 0},
+        {"label": "Ent", "matrix": [2, 13], "x": 13.75, "y": 0, "w": 1.25},
 
-        {"label": "Sft", "matrix": [3, 0], "x": 0, "y": 0, "w": 2.25},
+        {"label": "Sft", "matrix": [3, 0], "x": 0, "y": 0, "w": 1.25},
+        {"label": "< >", "matrix": [3, 1], "x": 1.25, "y": 0},
         {"label": "Z", "matrix": [3, 2], "x": 2.25, "y": 0},
         {"label": "X", "matrix": [3, 3], "x": 3.25, "y": 0},
         {"label": "C", "matrix": [3, 4], "x": 4.25, "y": 0},
@@ -121,14 +119,15 @@
         {"label": "Ctrl", "matrix": [4, 0], "x": 0, "y": 0, "w": 1.5},
         {"label": "Win", "matrix": [4, 1], "x": 1.5, "y": 0, "w": 1},
         {"label": "Alt", "matrix": [4, 2], "x": 2.5, "y": 0, "w": 1.5},
-        {"label": "Spc", "matrix": [4, 6], "x": 4, "y": 0, "w": 7},
-        {"label": "Alt", "matrix": [4, 11], "x": 11, "y": 0, "w": 1.5},
-        {"label": "Menu", "matrix": [4, 12], "x": 12.5, "y": 0, "w": 1},
-        {"label": "Ctrl", "matrix": [4, 13], "x": 13.5, "y": 0, "w": 1.5},
+        {"label": "Spc", "matrix": [4, 6], "x": 4, "y": 0, "w": 6},
+        {"label": "Alt", "matrix": [4, 10], "x": 10, "y": 0, "w": 1.25},
+        {"label": "Win", "matrix": [4, 11], "x": 11.25, "y": 0, "w": 1.25},
+        {"label": "Menu", "matrix": [4, 12], "x": 12.5, "y": 0, "w": 1.25},
+        {"label": "Ctrl", "matrix": [4, 13], "x": 13.75, "y": 0, "w": 1.25},
 
         {"label": "Left", "matrix": [4, 14], "x": 16, "y": 0},
         {"label": "Down", "matrix": [4, 15], "x": 17, "y": 0},
-        {"label": "Right", "matrix": [3, 14], "x": 18, "y": 0}
+        {"label": "Right", "matrix": [4, 16], "x": 18, "y": 0}
       ]
     }
   }
