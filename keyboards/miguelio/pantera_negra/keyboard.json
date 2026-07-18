@@ -37,7 +37,7 @@
   "ws2812": {
     "pin": "GP27"
   },
-  "diode_direction": "ROW2COL",
+  "diode_direction": "COL2ROW",
   "matrix_pins": {
     "rows": ["GP0", "GP1", "GP2", "GP3", "GP4"],
     "cols": ["GP5", "GP6", "GP7", "GP10", "GP11", "GP12", "GP16", "GP17", "GP18", "GP19", "GP22", "GP23", "GP24", "GP25", "GP26", "GP21", "GP20"]

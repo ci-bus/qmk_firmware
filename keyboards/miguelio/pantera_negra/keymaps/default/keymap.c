@@ -36,9 +36,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format on
 
 void keyboard_post_init_kb(void) {
-    rgblight_disable();
+    //rgblight_enable();
 }
-
+/*
 bool led_update_kb(led_t led_state) {
     bool res = led_update_user(led_state);
     if (res) {
@@ -50,3 +50,4 @@ bool led_update_kb(led_t led_state) {
     }
     return res;
 }
+*/
